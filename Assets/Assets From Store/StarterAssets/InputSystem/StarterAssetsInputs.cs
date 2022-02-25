@@ -7,13 +7,32 @@ namespace StarterAssets
 {
 	public class StarterAssetsInputs : MonoBehaviour
 	{
-		[Header("Character Input Values")]
+		//Singleton
+
+		public static StarterAssetsInputs instance = null;
+
+        private void Awake()
+        {
+			if (instance == null)
+			{
+				instance = this;
+			}
+			else if (instance != this)
+			{
+				Destroy(this);
+			}
+		}
+
+        [Header("Character Input Values")]
 		public Vector2 move;
 		public Vector2 look;
 		public bool jump;
 		public bool sprint;
 		public bool aim;
 		public bool shoot;
+		public bool reload;
+		public bool interact;
+		public bool bomb;
 
 		[Header("Movement Settings")]
 		public bool analogMovement;
@@ -43,9 +62,24 @@ namespace StarterAssets
 			JumpInput(value.isPressed);
 		}
 
+		public void OnInteract(InputValue value)
+		{
+			InteractInput(value.isPressed);
+		}
+
 		public void OnShoot(InputValue value)
 		{
 			ShootInput(value.isPressed);
+		}
+
+		public void OnReload(InputValue value)
+		{
+			ReloadInput(value.isPressed);
+		}
+
+		public void OnBomb(InputValue value)
+		{
+			BombInput(value.isPressed);
 		}
 
 		public void OnSprint(InputValue value)
@@ -77,9 +111,24 @@ namespace StarterAssets
 			jump = newJumpState;
 		}
 
+		public void InteractInput(bool newJumpState)
+		{
+			interact = newJumpState;
+		}
+
 		public void ShootInput(bool newShootState)
 		{
 			shoot = newShootState;
+		}
+
+		public void ReloadInput(bool newShootState)
+		{
+			reload = newShootState;
+		}
+
+		public void BombInput(bool newShootState)
+		{
+			bomb = newShootState;
 		}
 
 		public void SprintInput(bool newSprintState)

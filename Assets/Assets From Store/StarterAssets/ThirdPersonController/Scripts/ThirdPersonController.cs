@@ -94,6 +94,8 @@ namespace StarterAssets
 
 		private bool _rotateOnMove = true;
 
+		public bool death = false;
+
 		private void Awake()
 		{
 			// get a reference to our main camera
@@ -120,9 +122,12 @@ namespace StarterAssets
 		{
 			_hasAnimator = TryGetComponent(out _animator);
 			
-			JumpAndGravity();
-			GroundedCheck();
-			Move();
+			if(!death)
+            {
+				JumpAndGravity();
+				GroundedCheck();
+				Move();
+			}
 		}
 
 		private void LateUpdate()

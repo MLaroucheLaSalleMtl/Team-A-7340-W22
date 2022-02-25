@@ -24,13 +24,14 @@ public class Loading : MonoBehaviour {
 
     //For loading the scene by index
     [SerializeField] private int loadSceneByindex = -1;
-
+    private int nextScene;
     // Use this for initialization
     void Start () 
     {
         rect = GetComponent<RectTransform>();
         image = rect.GetComponent<Image>();
         image.fillAmount = 0.0f;
+        nextScene = PlayerPrefs.GetInt("NextScene");
     }
 	
 	// Update is called once per frame
@@ -75,7 +76,7 @@ public class Loading : MonoBehaviour {
         }
         else
         {
-            async = SceneManager.LoadSceneAsync(loadSceneByindex);
+            async = SceneManager.LoadSceneAsync(nextScene);
         }
 
         async.allowSceneActivation = true;

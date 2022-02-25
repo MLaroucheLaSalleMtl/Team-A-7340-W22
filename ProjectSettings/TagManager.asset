@@ -5,6 +5,13 @@ TagManager:
   serializedVersion: 2
   tags:
   - CinemachineTarget
+  - Enemy
+  - Hitbox
+  - Upgrade
+  - Boss
+  - Monster1
+  - Monster2
+  - Monster3
   layers:
   - Default
   - TransparentFX
@@ -12,10 +19,10 @@ TagManager:
   - Bloom
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
+  - Ground
+  - Player
+  - Hitbox
+  - Ability
   - 
   - 
   - 
