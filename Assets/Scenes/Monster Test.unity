@@ -1047,6 +1047,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1912525946 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1913753625, guid: 553ef22ebde9d9346b151a8546cba522, type: 3}
+  m_PrefabInstance: {fileID: 2081527841}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2081527841
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1054,6 +1065,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 938129732, guid: 553ef22ebde9d9346b151a8546cba522, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1913753625, guid: 553ef22ebde9d9346b151a8546cba522, type: 3}
+      propertyPath: m_FillMethod
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1579671728764135187, guid: 553ef22ebde9d9346b151a8546cba522, type: 3}
       propertyPath: m_Name
       value: Player
@@ -1223,6 +1242,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BossMonster
       objectReference: {fileID: 0}
+    - target: {fileID: 3911951889920084586, guid: 48524858462b7584e85352e6c24a2142, type: 3}
+      propertyPath: bossHealthBar
+      value: 
+      objectReference: {fileID: 1912525946}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 48524858462b7584e85352e6c24a2142, type: 3}
 --- !u!1001 &5967391040639298575

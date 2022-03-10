@@ -9,11 +9,13 @@ public class ShopManager : MonoBehaviour
 {
     public int[,] ShopUpgrades = new int[5, 5];
     private Player player;
+    private GameManager manager;
 
     [SerializeField] private GameObject NotEnoughGold;
 
     void Start()
     {
+        manager = GameManager.instance;
         NotEnoughGold.SetActive(false);
         player = Player.instance;
 
@@ -23,18 +25,22 @@ public class ShopManager : MonoBehaviour
         ShopUpgrades[1, 3] = 3;
         ShopUpgrades[1, 4] = 4;
 
-        //Upgrade price
-        ShopUpgrades[2, 1] = 100;
-        ShopUpgrades[2, 2] = 100;
-        ShopUpgrades[2, 3] = 100;
-        ShopUpgrades[2, 4] = 100;
+        /*
+        if (PlayerPrefs.GetInt("firstTime") == 0)
+        {
+            //Upgrade price
+            ShopUpgrades[2, 1] = 100;
+            ShopUpgrades[2, 2] = 100;
+            ShopUpgrades[2, 3] = 100;
+            ShopUpgrades[2, 4] = 100;
 
-        //Upgrade Lvl
-        ShopUpgrades[3, 1] = 1;
-        ShopUpgrades[3, 2] = 1;
-        ShopUpgrades[3, 3] = 1;
-        ShopUpgrades[3, 4] = 1;
-
+            //Upgrade Lvl
+            ShopUpgrades[3, 1] = 1;
+            ShopUpgrades[3, 2] = 1;
+            ShopUpgrades[3, 3] = 1;
+            ShopUpgrades[3, 4] = 1;
+        }
+        */
     }
 
     public void Upgrade()
@@ -56,6 +62,7 @@ public class ShopManager : MonoBehaviour
             else if(BtnRef.GetComponent<ButtonInfo>().UpgradeID == 2)
             {
                 player.MaxAmmo += 12;
+                player.TrueMaxAmmo += 12;
             }
             else if(BtnRef.GetComponent<ButtonInfo>().UpgradeID == 3)
             {

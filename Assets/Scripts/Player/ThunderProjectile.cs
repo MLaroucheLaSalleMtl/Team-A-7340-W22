@@ -25,8 +25,14 @@ public class ThunderProjectile : MonoBehaviour
     {
         if (!other.CompareTag("Hitbox"))
         {
-            if (other.CompareTag("Enemy"))
-                other.gameObject.GetComponentInParent<EnemyAI>().TakeDamage(player.AbilityDamage);
+            if (other.CompareTag("Monster1"))
+                other.gameObject.GetComponentInParent<Monster1>().TakeDamage(player.AbilityDamage);
+            else if(other.CompareTag("Monster2"))
+                other.gameObject.GetComponentInParent<Monster2>().TakeDamage(player.AbilityDamage);
+            else if(other.CompareTag("Monster3"))
+                other.gameObject.GetComponentInParent<Monster3>().TakeDamage(player.AbilityDamage);
+            else if(other.CompareTag("Boss"))
+                other.gameObject.GetComponentInParent<BossMonster>().TakeDamage(player.AbilityDamage);
 
             Instantiate(explosionHit, transform.position, Quaternion.identity);
             GameObject.Find("GameManager").GetComponent<GameManager>().PlaySoundEffect(

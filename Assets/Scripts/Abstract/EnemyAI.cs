@@ -29,7 +29,7 @@ public abstract class EnemyAI : MonoBehaviour
     //Attacking
     [SerializeField] private GameObject hitbox;
     public bool attacking;
-    public Player playermanager;
+    //public Player playermanager;
 
     //States
     public float sightRange, attackRange, distanceFromPlayer; 
@@ -40,12 +40,10 @@ public abstract class EnemyAI : MonoBehaviour
     private Animator anim;
 
 
-    //-----------------------------BOSS BEHAVIOR--------------------------------
     
     public float Damage { get => damage; set => damage = value; }
     public float Health { get => health; set => health = value; }
 
-    
     void Awake()
     {
         player = GameObject.Find("PlayerCharacter").transform;
@@ -53,13 +51,13 @@ public abstract class EnemyAI : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
         hitbox.SetActive(false);
-        playermanager = Player.instance;
+        
     }
 
     private void Start()
     {
-        
 
+        //playermanager = Player.instance;
     }
 
     public virtual void Update()
@@ -177,7 +175,8 @@ public abstract class EnemyAI : MonoBehaviour
         if (!isDead)
         {
             float exp = damage * 5 / 100;
-            playermanager.AddExp(exp);
+            //playermanager.AddExp(exp);
+            GameObject.Find("Player").GetComponentInChildren<Player>().AddExp(exp);
             if (health <= 0) MonsterDeath();
         }
     }
@@ -187,12 +186,14 @@ public abstract class EnemyAI : MonoBehaviour
         isDead = true;
         //agent.SetDestination(transform.position);
 
-        playermanager.AddExp(expValue);
-        playermanager.AddGold(goldValue);
+        //playermanager.AddExp(expValue);
+        GameObject.Find("Player").GetComponentInChildren<Player>().AddExp(expValue);
+        GameObject.Find("Player").GetComponentInChildren<Player>().AddGold(goldValue);
+        //playermanager.AddGold(goldValue);
 
         anim.SetFloat("DeadAnim", Random.Range(0, 3));
         anim.SetTrigger("Dead");
-        StartCoroutine(Dying(3));
+        StartCoroutine(Dying(5));
     }
 
     public virtual void Stop() { }

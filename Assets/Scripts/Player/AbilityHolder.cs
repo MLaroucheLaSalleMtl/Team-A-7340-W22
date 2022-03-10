@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using StarterAssets;
+using UnityEngine.SceneManagement;
 
 public class AbilityHolder : MonoBehaviour
 {
@@ -23,9 +24,9 @@ public class AbilityHolder : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(GameObject.Find("Player").GetComponentInChildren<StarterAssetsInputs>().aim)
+        if(GameObject.Find("Player").GetComponentInChildren<StarterAssetsInputs>().aim && SceneManager.GetActiveScene().buildIndex != 2)
         {
-            if (GameObject.Find("Player").GetComponentInChildren<StarterAssetsInputs>().bomb)
+            if (GameObject.Find("Player").GetComponentInChildren<StarterAssetsInputs>().ability1)
             {
                 abilityIndex = 0;
                 if (canUse[abilityIndex])
@@ -38,7 +39,7 @@ public class AbilityHolder : MonoBehaviour
                     StartCoroutine(Cooldown());
                 }
                 
-                GameObject.Find("Player").GetComponentInChildren<StarterAssetsInputs>().bomb = false;
+                GameObject.Find("Player").GetComponentInChildren<StarterAssetsInputs>().ability1 = false;
             }
             //else if for next ability (ability[1])
         }

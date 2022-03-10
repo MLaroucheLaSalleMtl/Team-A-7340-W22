@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class Monster3 : EnemyAI
 {
+    private Monster3Spawn m3Spawn;
     // Start is called before the first frame update
     void Start()
     {
-        
+        m3Spawn = GameObject.Find("M3Spawn").GetComponent<Monster3Spawn>();
     }
 
     // Update is called once per frame
@@ -24,5 +25,12 @@ public class Monster3 : EnemyAI
     {
         base.agent.SetDestination(transform.position);
         transform.LookAt(transform.position);
+    }
+
+    public override void MonsterDeath()
+    {
+        base.MonsterDeath();
+        m3Spawn.enemyCount--;
+        m3Spawn.hasReachedMax = false;
     }
 }

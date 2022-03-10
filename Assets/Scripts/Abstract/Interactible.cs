@@ -6,7 +6,8 @@ using TMPro;
 
 public abstract class Interactible : MonoBehaviour
 {
-    private bool PlayerInRange = false;
+    public bool PlayerInRange = false;
+
     [SerializeField] private TextMeshProUGUI InteractableText;
 
     //public StarterAssetsInputs Inputs;
@@ -21,8 +22,17 @@ public abstract class Interactible : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             InteractableText.enabled = true;
-            
+
+#if UNITY_PS4
+            InteractableText.text = "Press O to interact";
+#elif UNITY_XBOXONE
+            InteractableText.text = "Press B to interact";
+#else
+            InteractableText.text = "Press F to interact";
+#endif
             PlayerInRange = true;
+            GameObject.Find("Player").GetComponentInChildren<StarterAssetsInputs>().interact = false;
+            //so player doesnt enter with interact being true from pressing f beforehand, which would auto interact
         }
     }
 
@@ -32,18 +42,13 @@ public abstract class Interactible : MonoBehaviour
         {
             InteractableText.enabled = false;
             PlayerInRange = false;
+            Deactivate();
         }
-    }
-
-    private void HideUI()
-    {
-
     }
 
     public virtual void Activate()
     {
         InteractableText.enabled = false;
-        
     }
 
     public virtual void Deactivate()
@@ -58,17 +63,12 @@ public abstract class Interactible : MonoBehaviour
             Activate();
             GameObject.Find("Player").GetComponentInChildren<StarterAssetsInputs>().interact = false;
         }
-        else if(GameObject.Find("Player").GetComponentInChildren<StarterAssetsInputs>().interact) //To make sure that the interact bool isn't true whenever the player is not in the range
-        {
-            GameObject.Find("Player").GetComponentInChildren<StarterAssetsInputs>().interact = false;
-        }
-        
-        if(PlayerInRange == false)
-        {
-            Deactivate();
-        }
-        
+
     }
+
+
+
+
 
 
 

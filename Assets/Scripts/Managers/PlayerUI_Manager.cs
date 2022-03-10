@@ -18,6 +18,7 @@ public class PlayerUI_Manager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI healthText;
     [SerializeField] private Image[] ability;
     [SerializeField] private TextMeshProUGUI[] cooldownText;
+    [SerializeField] private Image healthBar;
     public bool gotExp = false;
     public bool gotGold = false;
     public bool lostGold = false;
@@ -44,6 +45,7 @@ public class PlayerUI_Manager : MonoBehaviour
     {
         //-----------------Health Text-----------------
         healthText.text = player.CurrentHealth.ToString() + " / " + player.MaxHealth.ToString();
+        healthBar.fillAmount = player.CurrentHealth / player.MaxHealth;
      
         //-----------------Ammo Text-----------------
         ammoText.text = player.CurrentAmmo.ToString() + " / " + player.MaxAmmo.ToString();

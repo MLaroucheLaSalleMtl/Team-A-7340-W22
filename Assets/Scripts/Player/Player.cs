@@ -6,13 +6,15 @@ using StarterAssets;
 
 public class Player : MonoBehaviour
 {
+    public Quest quest;
+    public ObjectiveType objectiveType;
     public static Player instance = null;
     [SerializeField] private float currentHealth;
     [SerializeField] private float maxHealth;
-    [SerializeField] private Image healthBar;
     [SerializeField] private float currentAmmo;
     [SerializeField] private float maxCurrentAmmo;
     [SerializeField] private float maxAmmo;
+    [SerializeField] private float trueMaxAmmo;
     [SerializeField] private float damage;
     [SerializeField] private float level;
     [SerializeField] private float addedHealthFromLevelUp;
@@ -51,6 +53,7 @@ public class Player : MonoBehaviour
     public float GoldLost { get => goldLost; set => goldLost = value; }
     public float ExpLost { get => expLost; set => expLost = value; }
     public float AbilityDamage { get => abilityDamage; set => abilityDamage = value; }
+    public float TrueMaxAmmo { get => trueMaxAmmo; set => trueMaxAmmo = value; }
 
     #endregion
 
@@ -65,6 +68,7 @@ public class Player : MonoBehaviour
             Destroy(this);
         }
         requiredExp = (int)Mathf.Floor(25 * Mathf.Pow(level, 2));
+        trueMaxAmmo = maxAmmo;
         isDead = false;
         animator = GetComponent<Animator>();
         playerAudio = GameObject.Find("Player").GetComponent<AudioSource>();
@@ -132,7 +136,6 @@ public class Player : MonoBehaviour
         if (isDead)//Make sure you dont take damage while being dead
             return;
         this.currentHealth -= damage;
-        this.healthBar.fillAmount -= damage / maxHealth;
 
         GameObject.Find("GameManager").GetComponent<GameManager>().PlaySoundEffect(playerAudio, gettingHurt, 0.3f, 1f);
         BloodScreenFade(1, 0, 1, false);
@@ -171,21 +174,18 @@ public class Player : MonoBehaviour
         {
             this.currentHealth += value;
             this.maxHealth += value;
-            this.healthBar.fillAmount = currentHealth / maxHealth;
         }
         else
         {
-            if(value <= (this.maxHealth - this.currentHealth))
+            if(value < (this.maxHealth - this.currentHealth))
             {
                 this.currentHealth += value;
             }
             else
             {
-                value = this.maxHealth - this.currentHealth;
-                this.currentHealth += value;
+                value = this.maxHealth;
+                this.currentHealth = value;
             }
-
-            this.healthBar.fillAmount = currentHealth / maxHealth;
         }
         
     }
@@ -193,5 +193,16 @@ public class Player : MonoBehaviour
     public bool CheckIfDead()
     {
         return this.currentHealth <= 0;
+    }
+
+    public void Quest()
+    {
+        if(quest.isActive)
+        {
+
+            quest.goal.MonsterKilled();
+            //GameObject.Find("Monster1").
+
+        }
     }
 }

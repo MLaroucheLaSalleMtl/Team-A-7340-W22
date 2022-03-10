@@ -32,7 +32,9 @@ namespace StarterAssets
 		public bool shoot;
 		public bool reload;
 		public bool interact;
-		public bool bomb;
+		public bool dialogue;
+		public bool ability1;
+		public bool pause;
 
 		[Header("Movement Settings")]
 		public bool analogMovement;
@@ -66,6 +68,16 @@ namespace StarterAssets
 		{
 			InteractInput(value.isPressed);
 		}
+
+		public void OnPause(InputValue value)
+		{
+			PauseInput(value.isPressed);
+		}
+
+		public void OnDialogue(InputValue value)
+        {
+			DialogueInput(value.isPressed);
+        }
 
 		public void OnShoot(InputValue value)
 		{
@@ -111,9 +123,19 @@ namespace StarterAssets
 			jump = newJumpState;
 		}
 
-		public void InteractInput(bool newJumpState)
+		public void InteractInput(bool newInteractState)
 		{
-			interact = newJumpState;
+			interact = newInteractState;
+		}
+
+		public void PauseInput(bool newPauseState)
+		{
+			pause = newPauseState;
+		}
+
+		public void DialogueInput(bool newDialogueState)
+		{
+			dialogue = newDialogueState;
 		}
 
 		public void ShootInput(bool newShootState)
@@ -128,7 +150,7 @@ namespace StarterAssets
 
 		public void BombInput(bool newShootState)
 		{
-			bomb = newShootState;
+			ability1 = newShootState;
 		}
 
 		public void SprintInput(bool newSprintState)

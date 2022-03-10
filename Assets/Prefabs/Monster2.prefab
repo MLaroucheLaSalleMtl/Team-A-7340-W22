@@ -1214,7 +1214,7 @@ MonoBehaviour:
     m_Bits: 128
   health: 350
   damage: 25
-  expValue: 150
+  expValue: 50
   goldValue: 200
   isDead: 0
   playerIsDead: 0

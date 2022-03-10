@@ -14790,7 +14790,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 25
   fireballHit: {fileID: 4347991900266770, guid: ac672dd87c0dfc748b925451f86ba8e7, type: 3}
-  damage: 50
+  damage: 80
 --- !u!135 &236612614310234540
 SphereCollider:
   m_ObjectHideFlags: 0

@@ -1545,7 +1545,7 @@ Transform:
   m_GameObject: {fileID: 3911951888273043549}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -96.10066, y: 0, z: 29.845589}
-  m_LocalScale: {x: 3.5, y: 3.5, z: 3.5}
+  m_LocalScale: {x: 4.5, y: 4.5, z: 4.5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3911951888272682045}
@@ -1584,7 +1584,7 @@ NavMeshAgent:
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 1
+  m_StoppingDistance: 3
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 0
   m_AutoRepath: 1
@@ -1602,7 +1602,7 @@ Animator:
   m_GameObject: {fileID: 3911951888273043549}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 6cc00ee00ce1bbb4fa493591423e4342, type: 3}
-  m_Controller: {fileID: 9100000, guid: 319ede60d45b4e64194ad34ca66b0952, type: 2}
+  m_Controller: {fileID: 9100000, guid: e0217373509ff56428fe32b809fe0146, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -1632,9 +1632,9 @@ MonoBehaviour:
   whatIsPlayer:
     serializedVersion: 2
     m_Bits: 128
-  health: 1000
+  health: 2000
   damage: 50
-  expValue: 1000
+  expValue: 500
   goldValue: 2000
   isDead: 0
   playerIsDead: 0
@@ -1642,7 +1642,6 @@ MonoBehaviour:
   isBeingAttacked: 0
   hitbox: {fileID: 3911951888584598347}
   attacking: 0
-  playermanager: {fileID: 0}
   sightRange: 25
   attackRange: 5
   distanceFromPlayer: 0
@@ -1651,6 +1650,7 @@ MonoBehaviour:
   fireball: {fileID: 4573069021856864, guid: 95341da5607aee84a9d13bfbfc749b7e, type: 3}
   muzzle: {fileID: 4770655339833536, guid: d97b2b36cf5cd53478ae58ddddbe976d, type: 3}
   cooldownTime: 5
+  bossHealthBar: {fileID: 0}
 --- !u!1 &3911951888273043551
 GameObject:
   m_ObjectHideFlags: 0

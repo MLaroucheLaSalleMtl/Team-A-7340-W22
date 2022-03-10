@@ -5,6 +5,7 @@ using Cinemachine;
 using StarterAssets;
 using UnityEngine.InputSystem;
 using UnityEngine.Animations.Rigging;
+using UnityEngine.SceneManagement;
 
 public class ThirdPersonShooterController : MonoBehaviour
 {
@@ -39,8 +40,11 @@ public class ThirdPersonShooterController : MonoBehaviour
     [SerializeField] private AudioClip reload;
     [SerializeField] private AudioClip noAmmo;
 
+    public bool canShoot = true;
+
     public CinemachineVirtualCamera AimVirtualCamera { get => aimVirtualCamera; set => aimVirtualCamera = value; }
     public AudioSource GunAudio { get => gunAudio; set => gunAudio = value; }
+    public AudioClip Reload1 { get => reload; set => reload = value; }
 
     private void Awake()
     {
@@ -60,7 +64,11 @@ public class ThirdPersonShooterController : MonoBehaviour
 
     private void Update()
     {
-        SetThirdPersonShooter();
+        if(SceneManager.GetActiveScene().buildIndex != 2)
+        {
+            SetThirdPersonShooter();
+        }
+        
         SetRigAim();
     }
 
