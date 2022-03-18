@@ -14,6 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Thunder Bomb
   cooldownTime: 10
-  activeTime: 1.5
+  cooldownTimeUI: 7
+  activeTime: 1
+  canUse: 0
+  performingAbility: 0
   bombProjectile: {fileID: 4146932020982170, guid: 113db6e6fdd147b4486296ad1c182dfe, type: 3}
   muzzle: {fileID: 4440228430039996, guid: 97b0bf16c5eddcd45a58bebf0642d4ee, type: 3}

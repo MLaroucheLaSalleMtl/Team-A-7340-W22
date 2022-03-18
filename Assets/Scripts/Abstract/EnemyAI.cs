@@ -169,7 +169,7 @@ public abstract class EnemyAI : MonoBehaviour
     public virtual void TakeDamage(float damage)
     {
         this.health -= damage;
-
+        this.isBeingAttacked = true;
         //add sound effect
 
         if (!isDead)

@@ -16,7 +16,7 @@ public class PlayerUI_Manager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI goldText;
     [SerializeField] private TextMeshProUGUI goldNotifier;
     [SerializeField] private TextMeshProUGUI healthText;
-    [SerializeField] private Image[] ability;
+    [SerializeField] private GameObject[] ability;
     [SerializeField] private TextMeshProUGUI[] cooldownText;
     [SerializeField] private Image healthBar;
     public bool gotExp = false;
@@ -46,7 +46,7 @@ public class PlayerUI_Manager : MonoBehaviour
         //-----------------Health Text-----------------
         healthText.text = player.CurrentHealth.ToString() + " / " + player.MaxHealth.ToString();
         healthBar.fillAmount = player.CurrentHealth / player.MaxHealth;
-     
+
         //-----------------Ammo Text-----------------
         ammoText.text = player.CurrentAmmo.ToString() + " / " + player.MaxAmmo.ToString();
 
@@ -58,7 +58,7 @@ public class PlayerUI_Manager : MonoBehaviour
             Notifier(expNotifier, player.ExpGained, " Exp", "+ ");
             gotExp = false;
         }
-        else if(lostExp)
+        else if (lostExp)
         {
             Notifier(expNotifier, player.ExpLost, "", "-");
             lostExp = false;
@@ -66,12 +66,12 @@ public class PlayerUI_Manager : MonoBehaviour
 
         //-----------------Gold Text-----------------
         goldText.text = player.Gold.ToString();
-        if(gotGold)
+        if (gotGold)
         {
             Notifier(goldNotifier, player.GoldGained, " ", "+");
             gotGold = false;
         }
-        else if(lostGold)
+        else if (lostGold)
         {
             Notifier(goldNotifier, player.GoldLost, "", "-");
             lostGold = false;
@@ -80,18 +80,29 @@ public class PlayerUI_Manager : MonoBehaviour
         //-----------------Ability Text-----------------
 
         //Ability 1
-        if(GameObject.Find("Player").GetComponentInChildren<AbilityHolder>().canUse[0])
+        SetAbilityUI(0);
+
+        //Ability 2
+        SetAbilityUI(1);
+
+        //Ability 3
+        SetAbilityUI(2);
+
+    }
+
+    private void SetAbilityUI(int index)
+    {
+        if (GameObject.Find("Player").GetComponentInChildren<AbilityHolder>().ability[index].CanUse)
         {
-            ability[0].enabled = true;
-            cooldownText[0].enabled = false;
+            ability[index].SetActive(true);
+            cooldownText[index].enabled = false;
         }
         else
         {
-            ability[0].enabled = false;
-            cooldownText[0].enabled = true;
-            cooldownText[0].text = GameObject.Find("Player").GetComponentInChildren<AbilityHolder>().cooldownTime.ToString();
+            ability[index].SetActive(false);
+            cooldownText[index].enabled = true;
+            cooldownText[index].text = GameObject.Find("Player").GetComponentInChildren<AbilityHolder>().ability[index].cooldownTimeUI.ToString();
         }
-
     }
 
     private IEnumerator TurnOffNotifier(TextMeshProUGUI text)

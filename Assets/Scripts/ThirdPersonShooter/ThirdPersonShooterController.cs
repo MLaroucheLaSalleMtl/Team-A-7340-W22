@@ -116,6 +116,9 @@ public class ThirdPersonShooterController : MonoBehaviour
             animator.SetLayerWeight(1, Mathf.Lerp(animator.GetLayerWeight(1), 0f, Time.deltaTime * 0.2f));
             //Makes sure the player doesn't aim/doesn't equip the weapon again
             WaitForUnequipAnim();
+
+            //Disable Laser Beam
+            GameObject.Find("GameManager").GetComponent<GameManager>().laser.SetActive(false);
             
         }
 
@@ -136,7 +139,9 @@ public class ThirdPersonShooterController : MonoBehaviour
             if (player.CurrentAmmo > 0 && player.CurrentAmmo <= player.MaxCurrentAmmo)
             {
                 if (starterAssetsInputs.aim && !reloadAnim
-                    && !GameObject.Find("Player").GetComponentInChildren<AbilityHolder>().performingAbility)
+                    && !GameObject.Find("Player").GetComponentInChildren<AbilityHolder>().ability[0].PerformingAbility
+                    && !GameObject.Find("Player").GetComponentInChildren<AbilityHolder>().ability[1].PerformingAbility
+                    && !GameObject.Find("Player").GetComponentInChildren<AbilityHolder>().ability[2].PerformingAbility)
                 {
                     /*
                     Vector3 aimDir = (worldPosition - spawnBullet.position).normalized;

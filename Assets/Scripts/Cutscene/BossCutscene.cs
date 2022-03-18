@@ -68,6 +68,7 @@ public class BossCutscene : MonoBehaviour
         playerCamera.SetActive(!value);
         canvasUI.SetActive(!value);
         GameObject.Find("Player").GetComponentInChildren<ThirdPersonShooterController>().enabled = !value;
+        GameObject.Find("Player").GetComponentInChildren<AbilityHolder>().enabled = !value;
         controller.MoveSpeed = speed;
     }
 

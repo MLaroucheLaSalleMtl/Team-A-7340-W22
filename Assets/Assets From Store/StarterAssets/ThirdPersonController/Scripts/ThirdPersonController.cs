@@ -21,10 +21,10 @@ namespace StarterAssets
 		public float SprintSpeed = 5.335f;
 		[Tooltip("How fast the character turns to face movement direction")]
 		[Range(0.0f, 0.3f)]
-		public float RotationSmoothTime = 0.12f;
+		public float RotationSmoothTime = 0.08f;
 		[Tooltip("Acceleration and deceleration")]
-		public float SpeedChangeRate = 10.0f;
-		public float Sensitivity = 1f;
+		public float SpeedChangeRate = 15.0f;
+		public float Sensitivity = 0.7f;
 
 		[Space(10)]
 		[Tooltip("The height the player can jump")]
@@ -84,9 +84,9 @@ namespace StarterAssets
 		private int _animIDMotionSpeed;
 
 		private Animator _animator;
-		private CharacterController _controller;
+		public CharacterController _controller;
 		private StarterAssetsInputs _input;
-		private GameObject _mainCamera;
+		private Transform _mainCamera;
 
 		private const float _threshold = 0.01f;
 
@@ -96,13 +96,13 @@ namespace StarterAssets
 
 		public bool death = false;
 
+		public Vector3 moveDirection;
+		float speedOffset = 0.1f;
+
 		private void Awake()
 		{
-			// get a reference to our main camera
-			if (_mainCamera == null)
-			{
-				_mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
-			}
+			_mainCamera = Camera.main.transform;
+			
 		}
 
 		private void Start()
@@ -120,21 +120,20 @@ namespace StarterAssets
 
 		private void Update()
 		{
-			_hasAnimator = TryGetComponent(out _animator);
-			
-			if(!death)
+			if (!death)
             {
-				JumpAndGravity();
 				GroundedCheck();
+				JumpAndGravity();
 				Move();
 			}
 		}
 
+		
 		private void LateUpdate()
 		{
 			CameraRotation();
 		}
-
+		
 		private void AssignAnimationIDs()
 		{
 			_animIDSpeed = Animator.StringToHash("Speed");
@@ -172,7 +171,10 @@ namespace StarterAssets
 
 			// Cinemachine will follow this target
 			CinemachineCameraTarget.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch + CameraAngleOverride, _cinemachineTargetYaw, 0.0f);
+
 		}
+
+		
 
 		private void Move()
 		{
@@ -188,7 +190,7 @@ namespace StarterAssets
 			// a reference to the players current horizontal velocity
 			float currentHorizontalSpeed = new Vector3(_controller.velocity.x, 0.0f, _controller.velocity.z).magnitude;
 
-			float speedOffset = 0.1f;
+			
 			float inputMagnitude = _input.analogMovement ? _input.move.magnitude : 1f;
 
 			// accelerate or decelerate to target speed
@@ -214,7 +216,7 @@ namespace StarterAssets
 			// if there is a move input rotate player when the player is moving
 			if (_input.move != Vector2.zero)
 			{
-				_targetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg + _mainCamera.transform.eulerAngles.y;
+				_targetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg + _mainCamera.eulerAngles.y;
 				float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, _targetRotation, ref _rotationVelocity, RotationSmoothTime);
 
 				// rotate to face input direction relative to camera position
@@ -227,6 +229,7 @@ namespace StarterAssets
 
 
 			Vector3 targetDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
+			moveDirection = targetDirection;
 
 			// move the player
 			_controller.Move(targetDirection.normalized * (_speed * Time.deltaTime) + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);

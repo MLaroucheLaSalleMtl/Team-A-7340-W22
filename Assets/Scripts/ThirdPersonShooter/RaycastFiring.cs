@@ -36,7 +36,7 @@ public class RaycastFiring : MonoBehaviour
         TrailRenderer bullet = Instantiate(bulletEffect, ray.origin, Quaternion.identity);
         bullet.AddPosition(ray.origin);
 
-        if(Physics.Raycast(ray, out hit, 100f, hitLayerMask))
+        if(Physics.Raycast(ray, out hit, 200f, hitLayerMask))
         {
             Debug.DrawLine(ray.origin, hit.point, Color.red, 1.0f);
             
@@ -44,28 +44,28 @@ public class RaycastFiring : MonoBehaviour
             if(hit.collider.gameObject.CompareTag("Boss"))
             {
                 hit.collider.gameObject.GetComponentInParent<BossMonster>().TakeDamage(player.Damage);
-                hit.collider.gameObject.GetComponentInParent<BossMonster>().isBeingAttacked = true;
+                
                 print("Damage Dealt:" + player.Damage);
                 HitEffect();
             }
             else if(hit.collider.gameObject.CompareTag("Monster1"))
             {
                 hit.collider.gameObject.GetComponentInParent<Monster1>().TakeDamage(player.Damage);
-                hit.collider.gameObject.GetComponentInParent<Monster1>().isBeingAttacked = true;
+                
                 print("Damage Dealt:" + player.Damage);
                 HitEffect();
             }
             else if(hit.collider.gameObject.CompareTag("Monster2"))
             {
                 hit.collider.gameObject.GetComponentInParent<Monster2>().TakeDamage(player.Damage);
-                hit.collider.gameObject.GetComponentInParent<Monster2>().isBeingAttacked = true;
+                
                 print("Damage Dealt:" + player.Damage);
                 HitEffect();
             }
             else if(hit.collider.gameObject.CompareTag("Monster3"))
             {
                 hit.collider.gameObject.GetComponentInParent<Monster3>().TakeDamage(player.Damage);
-                hit.collider.gameObject.GetComponentInParent<Monster3>().isBeingAttacked = true;
+                
                 print("Damage Dealt:" + player.Damage);
                 HitEffect();
             }

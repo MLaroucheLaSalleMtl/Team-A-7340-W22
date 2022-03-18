@@ -38,6 +38,9 @@ public class GameManager : MonoBehaviour
     public bool quest1Complete = false;
     [SerializeField] private TextMeshProUGUI quest_Text;
 
+    //LaserBeam
+    public GameObject laser;
+
     public bool firstTime;
     public bool deleteData;
 
@@ -71,6 +74,9 @@ public class GameManager : MonoBehaviour
             shopManager = GameObject.Find("Shop Manager").GetComponent<ShopManager>();
             if (PlayerPrefs.GetInt("firstTime") == 0)
             {
+                //Set the default time of the day
+                GameObject.Find("Day/Night Cycle").GetComponent<LightingManager>().TimeOfDay = 6;
+
                 SetPlayerStats();
                 SetShop();
                 SaveData();
@@ -253,8 +259,11 @@ public class GameManager : MonoBehaviour
 
             PlayerPrefs.SetInt("F1Dialogue", GameObject.Find("FemaleNPC1").GetComponent<TalkToNPC>().select);
             PlayerPrefs.SetInt("M1Dialogue", GameObject.Find("MaleNPC1").GetComponent<TalkToNPC>().select);
-            print("lol");
         }
+
+        //Time of the day
+        PlayerPrefs.SetFloat("timeOfDay", GameObject.Find("Day/Night Cycle").GetComponent<LightingManager>().TimeOfDay);
+        
         PlayerPrefs.Save();
     }
 
@@ -322,9 +331,10 @@ public class GameManager : MonoBehaviour
 
             GameObject.Find("FemaleNPC1").GetComponent<TalkToNPC>().select = PlayerPrefs.GetInt("F1Dialogue");
             GameObject.Find("MaleNPC1").GetComponent<TalkToNPC>().select = PlayerPrefs.GetInt("M1Dialogue");
-            print("lolol");
         }
 
+        //Time of the day
+        GameObject.Find("Day/Night Cycle").GetComponent<LightingManager>().TimeOfDay = PlayerPrefs.GetFloat("timeOfDay");
     }
 
     public void DeleteData()

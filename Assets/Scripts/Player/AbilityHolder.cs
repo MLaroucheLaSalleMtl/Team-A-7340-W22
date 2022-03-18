@@ -7,59 +7,76 @@ using UnityEngine.SceneManagement;
 public class AbilityHolder : MonoBehaviour
 {
     public Ability[] ability;
-    public float cooldownTime;
-    private float activeTime;
-    private int abilityIndex;
-    public bool[] canUse;
-    public bool performingAbility = false;
+    public GameObject dashEffect;
+    public bool dash;
+
     public AudioClip[] abilitySounds;
 
     private void Start()
     {
-        for(int i = 0; i < canUse.Length; i++)
+        for(int i = 0; i < ability.Length; i++)
         {
-            canUse[i] = true;
+            ability[i].CanUse = true;
+            ability[i].cooldownTimeUI = ability[i].cooldownTime;
         }
     }
     // Update is called once per frame
     void Update()
     {
-        if(GameObject.Find("Player").GetComponentInChildren<StarterAssetsInputs>().aim && SceneManager.GetActiveScene().buildIndex != 2)
+        if(SceneManager.GetActiveScene().buildIndex != 2)
         {
+            //Ability 1
             if (GameObject.Find("Player").GetComponentInChildren<StarterAssetsInputs>().ability1)
             {
-                abilityIndex = 0;
-                if (canUse[abilityIndex])
-                {
-                    //Activate
-                    ability[abilityIndex].TriggerAbility();
-                    cooldownTime = ability[abilityIndex].cooldownTime;
-                    activeTime = ability[abilityIndex].activeTime;
-                    StartCoroutine(WaitActiveTime());
-                    StartCoroutine(Cooldown());
-                }
-                
+                //Makes sure that you can only use this while aiming and also not while using the laser beam
+                if(GameObject.Find("Player").GetComponentInChildren<StarterAssetsInputs>().aim && !ability[2].PerformingAbility)
+                   ActivateAbility(0);
+
                 GameObject.Find("Player").GetComponentInChildren<StarterAssetsInputs>().ability1 = false;
             }
-            //else if for next ability (ability[1])
+
+            //Ability2
+            if(GameObject.Find("Player").GetComponentInChildren<StarterAssetsInputs>().ability2)
+            {
+                ActivateAbility(1);
+                
+                GameObject.Find("Player").GetComponentInChildren<StarterAssetsInputs>().ability2 = false;
+            }
+
+            //Ability3
+            if (GameObject.Find("Player").GetComponentInChildren<StarterAssetsInputs>().ability3)
+            {
+                if (GameObject.Find("Player").GetComponentInChildren<StarterAssetsInputs>().aim)
+                    ActivateAbility(2);
+
+                GameObject.Find("Player").GetComponentInChildren<StarterAssetsInputs>().ability3 = false;
+            }
         }
         
     }
-    private IEnumerator Cooldown()
-    {
-        canUse[abilityIndex] = false;
-        for (float i = cooldownTime; i >= 0; i--)
+
+    private void ActivateAbility(int index)
+    { 
+        if (ability[index].CanUse)
         {
-            yield return new WaitForSeconds(1f);
-            cooldownTime--;
+            //Activate
+            ability[index].TriggerAbility();
+            StartCoroutine(ability[index].WaitForActiveTime());
+            StartCoroutine(ability[index].StartCooldown());
+
+            //Only for dash ability
+            if (dash)
+                StartCoroutine(DashEffect());
         }
-        canUse[abilityIndex] = true;
     }
 
-    private IEnumerator WaitActiveTime()
+    private IEnumerator DashEffect()
     {
-        performingAbility = true;
-        yield return new WaitForSeconds(activeTime);
-        performingAbility = false;
+        dashEffect.SetActive(true);
+        yield return new WaitForSeconds(0.5f);
+        dashEffect.SetActive(false);
+        dash = false;
     }
+
+    
 }

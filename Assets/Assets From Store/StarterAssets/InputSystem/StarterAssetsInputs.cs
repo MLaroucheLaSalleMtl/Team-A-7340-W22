@@ -33,8 +33,10 @@ namespace StarterAssets
 		public bool reload;
 		public bool interact;
 		public bool dialogue;
-		public bool ability1;
 		public bool pause;
+		public bool ability1;
+		public bool ability2;
+		public bool ability3;
 
 		[Header("Movement Settings")]
 		public bool analogMovement;
@@ -46,62 +48,72 @@ namespace StarterAssets
 #endif
 
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
-		public void OnMove(InputValue value)
+		public void OnMove(InputAction.CallbackContext value)
 		{
-			MoveInput(value.Get<Vector2>());
+			MoveInput(value.ReadValue<Vector2>());
 		}
 
-		public void OnLook(InputValue value)
+		public void OnLook(InputAction.CallbackContext value)
 		{
 			if(cursorInputForLook)
 			{
-				LookInput(value.Get<Vector2>());
+				LookInput(value.ReadValue<Vector2>());
 			}
 		}
 
-		public void OnJump(InputValue value)
+		public void OnJump(InputAction.CallbackContext value)
 		{
-			JumpInput(value.isPressed);
+			JumpInput(value.performed);
 		}
 
-		public void OnInteract(InputValue value)
+		public void OnInteract(InputAction.CallbackContext value)
 		{
-			InteractInput(value.isPressed);
+			InteractInput(value.performed);
 		}
 
-		public void OnPause(InputValue value)
+		public void OnPause(InputAction.CallbackContext value)
 		{
-			PauseInput(value.isPressed);
+			PauseInput(value.performed);
 		}
 
-		public void OnDialogue(InputValue value)
+		public void OnDialogue(InputAction.CallbackContext value)
         {
-			DialogueInput(value.isPressed);
+			DialogueInput(value.performed);
         }
 
-		public void OnShoot(InputValue value)
+		public void OnShoot(InputAction.CallbackContext value)
 		{
-			ShootInput(value.isPressed);
+			ShootInput(value.performed);
 		}
 
-		public void OnReload(InputValue value)
+		public void OnReload(InputAction.CallbackContext value)
 		{
-			ReloadInput(value.isPressed);
+			ReloadInput(value.performed);
 		}
 
-		public void OnBomb(InputValue value)
+		public void OnAbility1(InputAction.CallbackContext value)
 		{
-			BombInput(value.isPressed);
+			Ability1Input(value.performed);
 		}
 
-		public void OnSprint(InputValue value)
+		public void OnAbility2(InputAction.CallbackContext value)
 		{
-			SprintInput(value.isPressed);
+			Ability2Input(value.performed);
 		}
 
-		public void OnAim(InputValue value)
+		public void OnAbility3(InputAction.CallbackContext value)
 		{
-			AimInput(value.isPressed);
+			Ability3Input(value.performed);
+		}
+
+		public void OnSprint(InputAction.CallbackContext value)
+		{
+			SprintInput(value.action.ReadValue<float>() == 1);
+		}
+
+		public void OnAim(InputAction.CallbackContext value)
+		{
+			AimInput(value.action.ReadValue<float>() == 1);
 		}
 #else
 	// old input sys if we do decide to have it (most likely wont)...
@@ -148,9 +160,19 @@ namespace StarterAssets
 			reload = newShootState;
 		}
 
-		public void BombInput(bool newShootState)
+		public void Ability1Input(bool newShootState)
 		{
 			ability1 = newShootState;
+		}
+
+		public void Ability2Input(bool newShootState)
+		{
+			ability2 = newShootState;
+		}
+
+		public void Ability3Input(bool newShootState)
+		{
+			ability3 = newShootState;
 		}
 
 		public void SprintInput(bool newSprintState)
