@@ -16,7 +16,8 @@ public class BossMonster : EnemyAI
 
     private float maxHealth;
     private bool canUse = true;
-    private Animator anim;
+    private bool usingAbility = false;
+    private Animator animator;
     private GameManager manager;
 
     // Start is called before the first frame update
@@ -24,7 +25,7 @@ public class BossMonster : EnemyAI
     {
         manager = GameManager.instance;
         maxHealth = base.Health;
-        anim = GetComponent<Animator>();
+        animator = GetComponent<Animator>();
         bossAudio = GetComponent<AudioSource>();
     }
 
@@ -32,15 +33,18 @@ public class BossMonster : EnemyAI
     public override void Update()
     {
         base.Update();
-        if (playerInSightRange && !playerInAttackRange && !playerIsDead
-                || isBeingAttacked && !playerInAttackRange && !playerIsDead)
+        if (playerInSightRange && !playerInAttackRange && !playerIsDead && !attacking
+                || isBeingAttacked && !playerInAttackRange && !playerIsDead && !attacking)
         {
-            ChasePlayer();
-            StartCoroutine(UseAbility());
+            if(!usingAbility)
+            {
+                ChasePlayer();
+                StartCoroutine(UseAbility());
+            }
         }
         if(base.isDead)
         {
-            Stop();
+            Stop(transform.position);
         }
 
         bossHealthBar.fillAmount = base.Health / maxHealth;
@@ -49,29 +53,32 @@ public class BossMonster : EnemyAI
 
     private IEnumerator UseAbility()
     {
-        //Fireball
-        yield return new WaitForSeconds(3f);
-        anim.SetTrigger("Shooting");
-        ShootFireball();
+        if (canUse && !base.isDead)
+        {
+            usingAbility = true;
+            yield return new WaitForSeconds(1.2f);
+            Stop(GameObject.Find("PlayerCharacter").transform.position);
+            animator.SetTrigger("Shooting");
+            yield return new WaitForSeconds(0.8f);
+            ShootFireball();
+            yield return new WaitForSeconds(0.2f);
+            usingAbility = false;
+            StartCoroutine(Cooldown());
+        }
     }
 
     private void ShootFireball()
     {
-        if (canUse && !base.isDead)
-        {
-            Vector3 pos = GameObject.Find("FireballSpawn").transform.position;
-            Vector3 end = GameObject.Find("PlayerCharacter").transform.position;
-            Vector3 dir = (end - pos).normalized + new Vector3(0, 0.1f, 0);
-            Instantiate(fireball, pos, Quaternion.LookRotation(dir, Vector3.up));
-            Instantiate(muzzle, pos, Quaternion.LookRotation(dir, Vector3.up));
+        Vector3 pos = GameObject.Find("FireballSpawn").transform.position;
+        Vector3 end = GameObject.Find("PlayerCharacter").transform.position;
+        Vector3 dir = (end - pos).normalized + new Vector3(0, 0.1f, 0);
+        Instantiate(fireball, pos, Quaternion.LookRotation(dir, Vector3.up));
+        Instantiate(muzzle, pos, Quaternion.LookRotation(dir, Vector3.up));
 
-            //Play sound
-            GameObject.Find("GameManager").GetComponent<GameManager>().PlaySoundEffect(
-                        GameObject.Find("FireballSpawn").GetComponent<AudioSource>(),
-                        GameObject.Find("GameManager").GetComponent<GameManager>().Fireball, 0.5f, 0.9f);
-
-            StartCoroutine(Cooldown());
-        }
+        //Play sound
+        GameObject.Find("GameManager").GetComponent<GameManager>().PlaySoundEffect(
+                    GameObject.Find("FireballSpawn").GetComponent<AudioSource>(),
+                    GameObject.Find("GameManager").GetComponent<GameManager>().Fireball, 0.5f, 0.9f);
     }
 
     private IEnumerator Cooldown()
@@ -112,9 +119,9 @@ public class BossMonster : EnemyAI
         
     }
 
-    public override void Stop()
+    public override void Stop(Vector3 value)
     {
         base.agent.SetDestination(transform.position);
-        transform.LookAt(transform.position);
+        transform.LookAt(value);
     }
 }

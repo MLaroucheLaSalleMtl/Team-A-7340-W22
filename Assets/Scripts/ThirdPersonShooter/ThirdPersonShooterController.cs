@@ -118,7 +118,7 @@ public class ThirdPersonShooterController : MonoBehaviour
             WaitForUnequipAnim();
 
             //Disable Laser Beam
-            GameObject.Find("GameManager").GetComponent<GameManager>().laser.SetActive(false);
+            GameObject.Find("Player").GetComponentInChildren<AbilityHolder>().laser.SetActive(false);
             
         }
 

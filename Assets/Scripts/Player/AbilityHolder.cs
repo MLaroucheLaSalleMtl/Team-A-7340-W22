@@ -8,6 +8,8 @@ public class AbilityHolder : MonoBehaviour
 {
     public Ability[] ability;
     public GameObject dashEffect;
+    public GameObject laser;
+    public GameObject shield;
     public bool dash;
 
     public AudioClip[] abilitySounds;
@@ -50,6 +52,13 @@ public class AbilityHolder : MonoBehaviour
                     ActivateAbility(2);
 
                 GameObject.Find("Player").GetComponentInChildren<StarterAssetsInputs>().ability3 = false;
+            }
+            //Ability4
+            if (GameObject.Find("Player").GetComponentInChildren<StarterAssetsInputs>().ability4)
+            {
+                ActivateAbility(3);
+
+                GameObject.Find("Player").GetComponentInChildren<StarterAssetsInputs>().ability4 = false;
             }
         }
         

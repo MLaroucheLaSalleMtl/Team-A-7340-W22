@@ -7,6 +7,6 @@ public class Explode : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Destroy(gameObject, 1);
+        Destroy(gameObject, 2);
     }
 }

@@ -10,6 +10,8 @@ public abstract class SelectDialogue : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
+            //GetQuest();
+
             if (dialogueManager.dialogueEnded)
             {
                 GetNextDialogue();
@@ -21,5 +23,10 @@ public abstract class SelectDialogue : MonoBehaviour
     {
 
     }
+
+    /* public virtual void GetQuest()
+    {
+
+    } */
 
 }

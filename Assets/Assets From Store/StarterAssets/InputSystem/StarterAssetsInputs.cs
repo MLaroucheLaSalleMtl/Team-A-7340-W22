@@ -33,10 +33,11 @@ namespace StarterAssets
 		public bool reload;
 		public bool interact;
 		public bool dialogue;
-		public bool pause;
+		public bool questLog;
 		public bool ability1;
 		public bool ability2;
 		public bool ability3;
+		public bool ability4;
 
 		[Header("Movement Settings")]
 		public bool analogMovement;
@@ -71,9 +72,9 @@ namespace StarterAssets
 			InteractInput(value.performed);
 		}
 
-		public void OnPause(InputAction.CallbackContext value)
+		public void OnQuestLog(InputAction.CallbackContext value)
 		{
-			PauseInput(value.performed);
+			QuestLogInput(value.performed);
 		}
 
 		public void OnDialogue(InputAction.CallbackContext value)
@@ -104,6 +105,11 @@ namespace StarterAssets
 		public void OnAbility3(InputAction.CallbackContext value)
 		{
 			Ability3Input(value.performed);
+		}
+
+		public void OnAbility4(InputAction.CallbackContext value)
+		{
+			Ability4Input(value.performed);
 		}
 
 		public void OnSprint(InputAction.CallbackContext value)
@@ -140,9 +146,9 @@ namespace StarterAssets
 			interact = newInteractState;
 		}
 
-		public void PauseInput(bool newPauseState)
+		public void QuestLogInput(bool newQuestLogState)
 		{
-			pause = newPauseState;
+			questLog = newQuestLogState;
 		}
 
 		public void DialogueInput(bool newDialogueState)
@@ -173,6 +179,11 @@ namespace StarterAssets
 		public void Ability3Input(bool newShootState)
 		{
 			ability3 = newShootState;
+		}
+
+		public void Ability4Input(bool newShootState)
+		{
+			ability4 = newShootState;
 		}
 
 		public void SprintInput(bool newSprintState)

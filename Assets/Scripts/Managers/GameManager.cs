@@ -6,6 +6,8 @@ using TMPro;
 using UnityEngine.SceneManagement;
 using StarterAssets;
 
+public delegate void KillConfirmed(EnemyAI enemy);
+
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance = null;
@@ -19,6 +21,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Image blackScreen;
     [SerializeField] private GameObject message;
     [SerializeField] private TextMeshProUGUI respawn_Text;
+    [SerializeField] private InventoryObject inventory;
 
     //Sound effects
     [SerializeField] private AudioSource gameAudio;
@@ -31,15 +34,21 @@ public class GameManager : MonoBehaviour
     //Pause menu
     private bool gamePaused;
     [SerializeField] GameObject pause_Menu;
+    [SerializeField] GameObject quest_Menu;
+    [SerializeField] GameObject inventory_Menu;
     public bool canPause = true;
 
-    //Quest
-    public bool quest1Active = false;
-    public bool quest1Complete = false;
-    [SerializeField] private TextMeshProUGUI quest_Text;
+    //Kill quest
+    public event KillConfirmed killConfirmedEvent;
 
-    //LaserBeam
-    public GameObject laser;
+    //Quests
+    [SerializeField] private GameObject questLog;
+    public bool questLogActive = false;
+
+    //Quest
+    public bool quest1Complete = false;
+    public bool quest2Complete = false;
+    public bool quest3Complete = false;
 
     public bool firstTime;
     public bool deleteData;
@@ -68,8 +77,10 @@ public class GameManager : MonoBehaviour
         player = Player.instance;
         gameAudio = GetComponent<AudioSource>();
         pause_Menu.SetActive(false);
+        quest_Menu.SetActive(false);
+        inventory_Menu.SetActive(false);
         //To make sure that you can't shoot in the church
-        if(SceneManager.GetActiveScene().buildIndex == 2)
+        if (SceneManager.GetActiveScene().buildIndex == 2)
         {
             shopManager = GameObject.Find("Shop Manager").GetComponent<ShopManager>();
             if (PlayerPrefs.GetInt("firstTime") == 0)
@@ -114,19 +125,29 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        if (quest1Active && !quest1Complete)
+        if (GameObject.Find("Player").GetComponentInChildren<StarterAssetsInputs>().questLog)
+        {
+            if (!questLogActive)
+            {
+                questLog.SetActive(true);
+                questLogActive = true;
+                Cursor.lockState = CursorLockMode.None;
+            }
+            else
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+                questLog.SetActive(false);
+                questLogActive = false;
+            }
+            GameObject.Find("Player").GetComponentInChildren<StarterAssetsInputs>().questLog = false;
+        }
+
+        /* if (quest1Active && !quest1Complete)
             quest_Text.text = "Defeat the 'leader' of the Beasts.";
         else if (quest1Complete)
             quest_Text.text = "You have completed all quests.";
         else
-            quest_Text.text = "";
-
-    }
-
-    public void CompleteFirstQuest()
-    {
-        quest1Active = false;
-        player.Gold += 20000;
+            quest_Text.text = ""; */
     }
 
     public void PlaySoundEffect(AudioSource source, AudioClip clip, float volume, float pitch)
@@ -163,7 +184,6 @@ public class GameManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Time.timeScale = 0f;
         gamePaused = true;
-
         pause_Menu.SetActive(true);
     }
 
@@ -174,6 +194,32 @@ public class GameManager : MonoBehaviour
         gamePaused = false;
         this.BlackScreenFade(0.7f, 0f, 1, false);
         pause_Menu.SetActive(false);
+        quest_Menu.SetActive(false);
+        inventory_Menu.SetActive(false);
+    }
+
+    public void QuestMenu()
+    {
+        pause_Menu.SetActive(false);
+        quest_Menu.SetActive(true);
+    }
+
+    public void ReturnFromQuestMenu()
+    {
+        pause_Menu.SetActive(true);
+        quest_Menu.SetActive(false);
+    }
+
+    public void InventoryMenu()
+    {
+        pause_Menu.SetActive(false);
+        inventory_Menu.SetActive(true);
+    }
+
+    public void ReturnFromInventoryMenu()
+    {
+        inventory_Menu.SetActive(false);
+        pause_Menu.SetActive(true);
     }
 
     public void ReturnToMainMenu()
@@ -241,8 +287,8 @@ public class GameManager : MonoBehaviour
         PlayerPrefs.SetInt("requiredExp", player.RequiredExp);
         PlayerPrefs.SetFloat("gold", player.Gold);
         PlayerPrefs.SetFloat("abilityDamage", player.AbilityDamage);
-        PlayerPrefs.SetInt("quest1Active", quest1Active ? 1 : 0);
         PlayerPrefs.SetInt("quest1Complete", quest1Complete ? 1 : 0);
+        inventory.Save();
 
         //Shop upgrades and dialogue
         if (SceneManager.GetActiveScene().buildIndex == 2)
@@ -257,8 +303,8 @@ public class GameManager : MonoBehaviour
             PlayerPrefs.SetInt("upgradeLevel3", shopManager.ShopUpgrades[3, 3]);
             PlayerPrefs.SetInt("upgradeLevel4", shopManager.ShopUpgrades[3, 4]);
 
-            PlayerPrefs.SetInt("F1Dialogue", GameObject.Find("FemaleNPC1").GetComponent<TalkToNPC>().select);
-            PlayerPrefs.SetInt("M1Dialogue", GameObject.Find("MaleNPC1").GetComponent<TalkToNPC>().select);
+            PlayerPrefs.SetInt("PDialogue", GameObject.Find("Priestess").GetComponent<TalkToNPC>().select);
+            PlayerPrefs.SetInt("MDialogue", GameObject.Find("Merchant").GetComponent<TalkToNPC>().select);
         }
 
         //Time of the day
@@ -313,8 +359,8 @@ public class GameManager : MonoBehaviour
         player.RequiredExp = PlayerPrefs.GetInt("requiredExp");
         player.Gold = PlayerPrefs.GetFloat("gold");
         player.AbilityDamage = PlayerPrefs.GetFloat("abilityDamage");
-        quest1Active = PlayerPrefs.GetInt("quest1Active") == 1;
         quest1Complete = PlayerPrefs.GetInt("quest1Complete") == 1;
+        inventory.Load();
 
         //Shop upgrades and dialogue
         if (SceneManager.GetActiveScene().buildIndex == 2)
@@ -329,8 +375,8 @@ public class GameManager : MonoBehaviour
             shopManager.ShopUpgrades[3, 3] = PlayerPrefs.GetInt("upgradeLevel3");
             shopManager.ShopUpgrades[3, 4] = PlayerPrefs.GetInt("upgradeLevel4");
 
-            GameObject.Find("FemaleNPC1").GetComponent<TalkToNPC>().select = PlayerPrefs.GetInt("F1Dialogue");
-            GameObject.Find("MaleNPC1").GetComponent<TalkToNPC>().select = PlayerPrefs.GetInt("M1Dialogue");
+            GameObject.Find("Priestess").GetComponent<TalkToNPC>().select = PlayerPrefs.GetInt("PDialogue");
+            GameObject.Find("Merchant").GetComponent<TalkToNPC>().select = PlayerPrefs.GetInt("MDialogue");
         }
 
         //Time of the day
@@ -341,4 +387,13 @@ public class GameManager : MonoBehaviour
     {
         PlayerPrefs.DeleteAll();
     }
+
+    public void OnKillConfirmed(EnemyAI enemy)
+    {
+        if (killConfirmedEvent != null)
+        {
+            killConfirmedEvent(enemy);
+        }
+    }
+
 }

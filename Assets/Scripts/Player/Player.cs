@@ -6,8 +6,6 @@ using StarterAssets;
 
 public class Player : MonoBehaviour
 {
-    public Quest quest;
-    public ObjectiveType objectiveType;
     public static Player instance = null;
     [SerializeField] private float currentHealth;
     [SerializeField] private float maxHealth;
@@ -22,6 +20,7 @@ public class Player : MonoBehaviour
     [SerializeField] private Image bloodScreen;
     [SerializeField] private GameObject burning;
     [SerializeField] private float abilityDamage;
+    [SerializeField] private InventoryObject inventory;
 
     private float expGained; //Change this to enemy's EXP or Quest EXP
     private float expLost;
@@ -32,6 +31,7 @@ public class Player : MonoBehaviour
     private bool leveledUp;
     public bool isDead;
     public bool isBurned;
+    public bool shieldOn;
 
     private Animator animator;
     [SerializeField] private AudioSource playerAudio;
@@ -54,6 +54,7 @@ public class Player : MonoBehaviour
     public float ExpLost { get => expLost; set => expLost = value; }
     public float AbilityDamage { get => abilityDamage; set => abilityDamage = value; }
     public float TrueMaxAmmo { get => trueMaxAmmo; set => trueMaxAmmo = value; }
+    public GameObject Burning { get => burning; set => burning = value; }
 
     #endregion
 
@@ -88,11 +89,6 @@ public class Player : MonoBehaviour
             GameObject.Find("GameManager").GetComponent<GameManager>().PlaySoundEffect(
                                              GameObject.Find("CanvasBasicUI").GetComponent<PlayerUI_Manager>().UiAudio,
                                              GameObject.Find("CanvasBasicUI").GetComponent<PlayerUI_Manager>().LevelUp, 0.5f, 1.2f);
-        }
-
-        if(isBurned)
-        {
-            burning.SetActive(true);
         }
     }
 
@@ -133,7 +129,7 @@ public class Player : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
-        if (isDead)//Make sure you dont take damage while being dead
+        if (isDead || shieldOn)//Make sure you dont take damage while being dead
             return;
         this.currentHealth -= damage;
 
@@ -195,14 +191,38 @@ public class Player : MonoBehaviour
         return this.currentHealth <= 0;
     }
 
-    public void Quest()
+    private void OnTriggerEnter(Collider other)
     {
-        if(quest.isActive)
+        var item = other.GetComponent<ItemDrop>();
+        if(item)
         {
-
-            quest.goal.MonsterKilled();
-            //GameObject.Find("Monster1").
-
+            switch (item.randomItem)
+            {
+                case 0: case 1: case 2: case 3: case 4:
+                    break;
+                case 5: case 6: case 7: case 8:
+                    inventory.AddItem(new Item(item.item[0]), 1);
+                    break;
+                case 9: case 10:
+                    inventory.AddItem(new Item(item.item[1]), 1);
+                    break;
+                case 11: case 12:
+                    inventory.AddItem(new Item(item.item[2]), 1);
+                    break;
+                case 13:
+                    inventory.AddItem(new Item(item.item[3]), 1);
+                    break;
+                case 14:
+                    inventory.AddItem(new Item(item.item[4]), 1);
+                    break;
+                default:
+                    break;
+            }
         }
+    }
+
+    private void OnApplicationQuit()
+    {
+        //inventory.Container.Clear();
     }
 }

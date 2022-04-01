@@ -18,8 +18,15 @@ public class DialogueManager : MonoBehaviour
     public bool dialogueIsPlaying;
     public bool dialogueEnded;
 
+    [SerializeField] private Quest[] quests;
+    private QuestLog questLog;
+    public int questIndex;
+    public bool questAccepted;
+
     [SerializeField] private GameObject[] choices;
     private TextMeshProUGUI[] choicesText;
+
+    public Quest[] Quests { get => quests; }
 
     private void Awake()
     {
@@ -44,6 +51,9 @@ public class DialogueManager : MonoBehaviour
         dialogueIsPlaying = false;
         dialoguePanel.SetActive(false);
         interaction = GameObject.FindObjectOfType<TalkToNPC>();
+
+        questLog = QuestLog.Instance;
+        questAccepted = false;
 
         choicesText = new TextMeshProUGUI[choices.Length];
         int index = 0;
@@ -83,9 +93,25 @@ public class DialogueManager : MonoBehaviour
             dialogueText.text = currentStory.Continue();
             //display choices if any
             DisplayChoices();
+
+            currentStory.ObserveVariable("selectQuest", (string varName, object newValue) => {
+                AcceptQuest((int)newValue);
+            });
         }
         else
             ExitDialogueMode();
+    }
+
+    private int AcceptQuest(int quest)
+    {
+            if (quest >= 0)
+            {
+                questLog.AcceptQuest(quests[quest]);
+                questAccepted = true;
+                return -1;
+            }
+            else
+                return -1;
     }
 
     private void DisplayChoices()

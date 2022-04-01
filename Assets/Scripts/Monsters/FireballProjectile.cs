@@ -24,17 +24,18 @@ public class FireballProjectile : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && !GameObject.Find("Player").GetComponentInChildren<Player>().shieldOn)
         {
             other.gameObject.GetComponentInChildren<Player>().TakeDamage(damage);
             GameObject.Find("Player").GetComponentInChildren<Player>().isBurned = true;
+            GameObject.Find("Player").GetComponentInChildren<Player>().Burning.SetActive(true);
         }
         
         Instantiate(fireballHit, transform.position, Quaternion.identity);
         GameObject.Find("GameManager").GetComponent<GameManager>().PlaySoundEffect(
                         GameObject.Find("FireballSpawn").GetComponent<AudioSource>(),
                         GameObject.Find("GameManager").GetComponent<GameManager>().FireballHit, 0.5f, 1f);
-        if (!other.CompareTag("Hitbox"))
+        if (!other.CompareTag("Hitbox") && !other.CompareTag("Boss"))
            Destroy(gameObject);
     }
 

@@ -8,8 +8,8 @@ public class LaserAbility : Ability
 {
     public override void TriggerAbility()
     {
-        GameObject.Find("GameManager").GetComponent<GameManager>().laser.SetActive(true);
+        GameObject.Find("Player").GetComponentInChildren<AbilityHolder>().laser.SetActive(true);
 
-        GameObject.Find("GameManager").GetComponent<GameManager>().laser.GetComponent<LaserScript>().ShootLaser(activeTime);
+        GameObject.Find("Player").GetComponentInChildren<AbilityHolder>().laser.GetComponent<LaserScript>().ShootLaser(activeTime);
     }
 }

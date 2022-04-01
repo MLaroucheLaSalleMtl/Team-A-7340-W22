@@ -88,6 +88,9 @@ public class PlayerUI_Manager : MonoBehaviour
         //Ability 3
         SetAbilityUI(2);
 
+        //Ability4
+        SetAbilityUI(3);
+
     }
 
     private void SetAbilityUI(int index)

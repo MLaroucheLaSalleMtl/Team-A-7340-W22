@@ -38,11 +38,14 @@ public abstract class EnemyAI : MonoBehaviour
 
     //Animation
     private Animator anim;
+    public GameObject itemDrop;
 
-
+    //kill quest
+    [SerializeField] private string type;
     
     public float Damage { get => damage; set => damage = value; }
     public float Health { get => health; set => health = value; }
+    public string Type { get => type; set => type = value; }
 
     void Awake()
     {
@@ -72,11 +75,6 @@ public abstract class EnemyAI : MonoBehaviour
             if (!isIdling)
                 if (!playerInSightRange || playerIsDead) Patrolling();
 
-            if (playerInSightRange && !playerInAttackRange && !playerIsDead
-                || isBeingAttacked && !playerInAttackRange && !playerIsDead)
-            {
-                ChasePlayer();
-            }
             if(!attacking && !playerIsDead)
                 if (playerInSightRange && playerInAttackRange) AttackPlayer();
         }
@@ -146,23 +144,25 @@ public abstract class EnemyAI : MonoBehaviour
         anim.SetTrigger("Attacking");
 
         if(!attacking)
-            StartCoroutine(ResetAttack(2f));
+            StartCoroutine(ResetAttack(1f));
     }
 
-    
 
     private IEnumerator SetDestination()
     {
         yield return new WaitForSeconds(2f);
         agent.SetDestination(player.position);
     }
+
     private IEnumerator ResetAttack(float time)
     {
         attacking = true;
+        yield return new WaitForSeconds(0.6f);
         hitbox.SetActive(true);
         anim.SetBool("Moving", false);
-        yield return new WaitForSeconds(time);
+        yield return new WaitForSeconds(0.6f);
         hitbox.SetActive(false);
+        yield return new WaitForSeconds(time);
         attacking = false;
     }
 
@@ -188,18 +188,25 @@ public abstract class EnemyAI : MonoBehaviour
 
         //playermanager.AddExp(expValue);
         GameObject.Find("Player").GetComponentInChildren<Player>().AddExp(expValue);
-        GameObject.Find("Player").GetComponentInChildren<Player>().AddGold(goldValue);
         //playermanager.AddGold(goldValue);
 
         anim.SetFloat("DeadAnim", Random.Range(0, 3));
         anim.SetTrigger("Dead");
-        StartCoroutine(Dying(5));
+        StartCoroutine(Dying(4));
+
+        //confirm kill
+        GameManager.instance.OnKillConfirmed(this);
     }
 
-    public virtual void Stop() { }
+    public virtual void Stop(Vector3 value) { }
 
     private IEnumerator Dying(float time)
     {
+        int goldOrItem = Random.Range(0, 2);
+
+        GameObject itemDropClone = Instantiate(itemDrop, transform.position, Quaternion.identity);
+        itemDropClone.GetComponent<ItemDrop>().goldDrop = goldValue + " gold";
+        itemDropClone.GetComponent<ItemDrop>().gold = goldValue;
         yield return new WaitForSeconds(time);
         Destroy(gameObject);
     }

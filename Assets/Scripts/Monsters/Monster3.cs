@@ -15,16 +15,21 @@ public class Monster3 : EnemyAI
     public override void Update()
     {
         base.Update();
+        if (playerInSightRange && !playerInAttackRange && !playerIsDead && !attacking
+                || isBeingAttacked && !playerInAttackRange && !playerIsDead && !attacking)
+        {
+            ChasePlayer();
+        }
         if (base.isDead)
         {
-            Stop();
+            Stop(transform.position);
         }
     }
 
-    public override void Stop()
+    public override void Stop(Vector3 value)
     {
-        base.agent.SetDestination(transform.position);
-        transform.LookAt(transform.position);
+        base.agent.SetDestination(value);
+        transform.LookAt(value);
     }
 
     public override void MonsterDeath()

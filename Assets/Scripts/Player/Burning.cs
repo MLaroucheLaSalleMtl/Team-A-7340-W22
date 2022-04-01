@@ -26,7 +26,8 @@ public class Burning : MonoBehaviour
             StartCoroutine(BurningEffect());
             player.isBurned = false;
         }
-    }   
+    }  
+    
 
     private IEnumerator BurningEffect()
     { 
